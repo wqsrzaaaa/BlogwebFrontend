@@ -79,6 +79,7 @@ export default function IndivisualProfile() {
       ? profileData.follower || []
       : profileData.following || [];
 
+      
   return (
     <>
       <Navbar />

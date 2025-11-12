@@ -71,6 +71,7 @@ export default function Navbar({ showLogin }) {
       }
       const data = await res.json()
       setcurrentUser(data.user)
+      setFollowing(data.user.following)
     } catch (error) {
       console.log(error);
     }
@@ -173,6 +174,11 @@ export default function Navbar({ showLogin }) {
   const usersToShow = showAll ? filterUser : filterUser.slice(0, 5);
 
   const searchBarData = suggestion?.filter((e) => e.title.toLowerCase().includes(suggData.toLowerCase()))
+
+  const followingIds = following.map(f => String(f._id || f));
+  const ids = usersToShow.map(u => String(u._id));
+
+  const isAnyFollowing = ids.some(id => followingIds.includes(id));
 
   return (
     <nav className="w-full fixed top-0 z-50 bg-white dark:bg-gray-800 shadow-md px-2 md:px-6 py-3 flex items-center justify-between">
@@ -451,7 +457,8 @@ export default function Navbar({ showLogin }) {
                             >
                               <div
                                 onClick={() => router.push(`/user/profile/${user._id}`)}
-                                className="flex items-center gap-2  w-full">
+                                className="flex items-center gap-2 w-full"
+                              >
                                 <Image
                                   src={user?.profile || "/defaultprofile.png"}
                                   alt={`${user?.name || "User"} profile`}
@@ -462,41 +469,47 @@ export default function Navbar({ showLogin }) {
                                 <div className="flex flex-col">
                                   <p className="font-medium">{user.username}</p>
                                   <p className="text-sm text-zinc-500">
-                                    {user.bio?.length > 25
-                                      ? user.bio.slice(0, 25) + "..."
-                                      : user.bio}
+                                    {user.bio?.length > 25 ? user.bio.slice(0, 25) + "..." : user.bio}
                                   </p>
                                 </div>
                               </div>
+
                               <button
                                 onClick={() => {
-                                  const isFollowing = following.some(f => f._id === user._id);
+                                  // Normalize following array
+                                  const followingIds = following.map(f => String(f._id || f));
+                                  const isFollowing = followingIds.includes(String(user._id));
 
                                   if (isFollowing) {
-                                    setFollowing(prev => prev.filter(f => f._id !== user._id));
+                                    // Unfollow logic
+                                    setFollowing(prev =>
+                                      prev.filter(id => String(id._id || id) !== String(user._id))
+                                    );
                                     unflwFeature(user._id).catch(err => {
                                       console.error(err);
-                                      setFollowing(prev => [...prev, user]);
+                                      setFollowing(prev => [...prev, user._id]);
                                     });
                                   } else {
-                                    setFollowing(prev => [...prev, user]);
+                                    // Follow logic
+                                    setFollowing(prev => [...prev, user._id]);
                                     flwFeature(user._id).catch(err => {
                                       console.error(err);
-                                      setFollowing(prev => prev.filter(f => f._id !== user._id));
+                                      setFollowing(prev =>
+                                        prev.filter(id => String(id._id || id) !== String(user._id))
+                                      );
                                     });
                                   }
                                 }}
                                 className={`flex items-center cursor-pointer gap-1 px-2 py-1 rounded-lg text-sm transition 
-    ${following.some(f => f._id === user._id)
+    ${following.some(f => String(f._id || f) === String(user._id))
                                     ? "bg-gray-300 text-black hover:bg-gray-400"
-                                    : "bg-blue-700 text-white"}`
-                                }
+                                    : "bg-blue-700 text-white"}`}
                               >
                                 <UserPlus className="w-4 h-4" />
-                                {following.some(f => f._id === user._id) ? "Following" : "Follow"}
+                                {following.some(f => String(f._id || f) === String(user._id))
+                                  ? "Following"
+                                  : "Follow"}
                               </button>
-
-
 
                             </div>
                           ))
@@ -544,10 +557,8 @@ export default function Navbar({ showLogin }) {
         ) : (
           <>
             {loading ? (
-              // while fetching current user → show skeleton
               <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse" />
             ) : currentUser ? (
-              // if user exists → show their profile
               <Link
                 href="/profile"
                 className="text-gray-700 hover:text-black border-none bg-transparent !shadow-none hover:bg-transparent cursor-pointer focus:!ring-0 focus:!border-0"
@@ -561,7 +572,6 @@ export default function Navbar({ showLogin }) {
                 />
               </Link>
             ) : !loading && !currentUser ? (
-              // if NOT loading AND no user → show Login button
               <Link
                 href="/signin"
                 className="text-gray-700 bg-orange-400 p-2 px-4 rounded-2xl"
