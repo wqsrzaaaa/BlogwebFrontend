@@ -149,7 +149,7 @@ const Login = () => {
       {/* Add your other floating cards similarly, replacing <img> with <Image> */}
 
       {/* Login Form */}
-      <Card className="w-full md:w-100 md:h-fit h-screen flex  justify-center relative z-99 ">
+      <Card className="w-full md:w-100 md:h-fit h-screen md:rounded-2xl rounded-none flex  justify-center relative z-99 ">
         <CardHeader>
           <CardTitle className="text-orange-500">Wellcome to Bloggedin</CardTitle>
           <CardDescription>

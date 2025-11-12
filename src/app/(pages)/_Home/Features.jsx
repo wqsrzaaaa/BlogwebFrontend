@@ -191,13 +191,6 @@ export default function Features({ showLogin, setShowLogin }) {
     );
   const followingBlogs = currentUser?.following?.flatMap(user => user.blogs || []);
 
-  const filterFollowingblog = interestBlogs.length === 0
-    ? followingBlogs
-    : followingBlogs.filter((blog) =>
-      interestBlogs.some((cat) =>
-        blog.Categories.some((c) => c.toLowerCase() === cat.toLowerCase())
-      )
-    );
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -340,95 +333,95 @@ export default function Features({ showLogin, setShowLogin }) {
               )}
             </>
           )}
-        {activeTab === "following" && (
-          <>
-            {loading ? (
-              <div className="flex flex-col gap-5">
-                <BlogSkeleton />
-                <BlogSkeleton />
-              </div>
-            ) : followingBlogs && followingBlogs.length > 0 ? (
-              <div className="flex flex-col gap-5">
-                <AnimatePresence>
-                  {followingBlogs.map((blog) => (
-                    <motion.div
-                      key={blog._id}
-                      onClick={() => {
-                        setSelectedBlog(blog);
-                        router.push(`/story/${blog._id}`);
-                      }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="rounded-2xl hover:scale-101 md:dark:border-b-1 border-zinc-400 dark:shadow-none cursor-pointer h-fit p-2 shadow-md hover:shadow-lg transition flex flex-col sm:flex-row-reverse items-center sm:items-start gap-4"
-                    >
-                      {/* Image */}
-                      <img
-                        src={
-                          blog.image ||
-                          "https://tse2.mm.bing.net/th/id/OIP.90sDWdblfZFiciIEpsGFwwHaEY?rs=1&pid=ImgDetMain&o=7&rm=3"
-                        }
-                        alt={blog.title || "Blog cover"}
-                        className="w-full sm:w-40 h-48 sm:h-32 object-cover rounded-xl"
-                      />
-
-                      {/* Text content */}
-                      <div className="flex-1 w-full">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-1">
-                          {blog.title || "Blog Title Goes Here"}
-                        </h2>
-                        <p
-                          className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-3"
-                          dangerouslySetInnerHTML={{ __html: blog.description }}
+          {activeTab === "following" && (
+            <>
+              {loading ? (
+                <div className="flex flex-col gap-5">
+                  <BlogSkeleton />
+                  <BlogSkeleton />
+                </div>
+              ) : followingBlogs && followingBlogs.length > 0 ? (
+                <div className="flex flex-col gap-5">
+                  <AnimatePresence>
+                    {followingBlogs.map((blog) => (
+                      <motion.div
+                        key={blog._id}
+                        onClick={() => {
+                          setSelectedBlog(blog);
+                          router.push(`/story/${blog._id}`);
+                        }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="rounded-2xl hover:scale-101 md:dark:border-b-1 border-zinc-400 dark:shadow-none cursor-pointer h-fit p-2 shadow-md hover:shadow-lg transition flex flex-col sm:flex-row-reverse items-center sm:items-start gap-4"
+                      >
+                        {/* Image */}
+                        <img
+                          src={
+                            blog.image ||
+                            "https://tse2.mm.bing.net/th/id/OIP.90sDWdblfZFiciIEpsGFwwHaEY?rs=1&pid=ImgDetMain&o=7&rm=3"
+                          }
+                          alt={blog.title || "Blog cover"}
+                          className="w-full sm:w-40 h-48 sm:h-32 object-cover rounded-xl"
                         />
 
-                        <div className="flex items-center justify-between">
-                          {/* Author + Liked by */}
-                          <div className="flex items-center gap-3">
-                            {/* Author */}
-                            <div className="flex items-center gap-2">
-                              <img
-                                src={blog.author?.profile || "/defaultprofile.png"}
-                                alt={blog.author?.username || "Author"}
-                                className="w-8 h-8 rounded-full  object-cover"
-                              />
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {blog.author?.username || "user"}
-                              </span>
-                            </div>
+                        {/* Text content */}
+                        <div className="flex-1 w-full">
+                          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-1">
+                            {blog.title || "Blog Title Goes Here"}
+                          </h2>
+                          <p
+                            className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-3"
+                            dangerouslySetInnerHTML={{ __html: blog.description }}
+                          />
 
-                            {/* Liked by users */}
-                            <div className="flex items-center -space-x-2">
-                              {blog.likes?.slice(0, 3).map((user, index) => (
+                          <div className="flex items-center justify-between">
+                            {/* Author + Liked by */}
+                            <div className="flex items-center gap-3">
+                              {/* Author */}
+                              <div className="flex items-center gap-2">
                                 <img
-                                  key={index}
-                                  src={user.profile || "/defaultprofile.png"}
-                                  alt={user.username || `User${index + 1}`}
-                                  className="w-6 h-6 object-cover rounded-full border border-white"
+                                  src={blog.author?.profile || "/defaultprofile.png"}
+                                  alt={blog.author?.username || "Author"}
+                                  className="w-8 h-8 rounded-full  object-cover"
                                 />
-                              ))}
-                              {blog.likes?.length > 0 && (
-                                <span className="text-xs text-gray-500 dark:text-gray-300 ml-4">
-                                  +{blog.likes.length} liked
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                  {blog.author?.username || "user"}
                                 </span>
-                              )}
+                              </div>
+
+                              {/* Liked by users */}
+                              <div className="flex items-center -space-x-2">
+                                {blog.likes?.slice(0, 3).map((user, index) => (
+                                  <img
+                                    key={index}
+                                    src={user.profile || "/defaultprofile.png"}
+                                    alt={user.username || `User${index + 1}`}
+                                    className="w-6 h-6 object-cover rounded-full border border-white"
+                                  />
+                                ))}
+                                {blog.likes?.length > 0 && (
+                                  <span className="text-xs text-gray-500 dark:text-gray-300 ml-4">
+                                    +{blog.likes.length} liked
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
+                          <p className="text-zinc-400 md:hidden block text-sm mt-2">{formatDate(blog.date)}</p>
                         </div>
-                        <p className="text-zinc-400 md:hidden block text-sm mt-2">{formatDate(blog.date)}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400">
-                No blogs from followed users yet.
-              </p>
-            )}
-          </>
-        )}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400">
+                  No blogs from followed users yet.
+                </p>
+              )}
+            </>
+          )}
         </div>
 
       </div>
@@ -445,7 +438,8 @@ export default function Features({ showLogin, setShowLogin }) {
                 >
                   <div
                     onClick={() => router.push(`/user/profile/${user._id}`)}
-                    className="flex items-center gap-2  w-full">
+                    className="flex items-center gap-2 w-full"
+                  >
                     <Image
                       src={user?.profile || "/defaultprofile.png"}
                       alt={`${user?.name || "User"} profile`}
@@ -456,27 +450,47 @@ export default function Features({ showLogin, setShowLogin }) {
                     <div className="flex flex-col">
                       <p className="font-medium">{user.username}</p>
                       <p className="text-sm text-zinc-500">
-                        {user.bio?.length > 25
-                          ? user.bio.slice(0, 25) + "..."
-                          : user.bio}
+                        {user.bio?.length > 25 ? user.bio.slice(0, 25) + "..." : user.bio}
                       </p>
                     </div>
                   </div>
+
                   <button
-                    onClick={() =>
-                      following.includes(user._id)
-                        ? unflwFeature(user._id)
-                        : flwFeature(user._id)
-                    }
+                    onClick={() => {
+                      // Normalize following array
+                      const followingIds = following.map(f => String(f._id || f));
+                      const isFollowing = followingIds.includes(String(user._id));
+
+                      if (isFollowing) {
+                        // Unfollow logic
+                        setFollowing(prev =>
+                          prev.filter(id => String(id._id || id) !== String(user._id))
+                        );
+                        unflwFeature(user._id).catch(err => {
+                          console.error(err);
+                          setFollowing(prev => [...prev, user._id]);
+                        });
+                      } else {
+                        // Follow logic
+                        setFollowing(prev => [...prev, user._id]);
+                        flwFeature(user._id).catch(err => {
+                          console.error(err);
+                          setFollowing(prev =>
+                            prev.filter(id => String(id._id || id) !== String(user._id))
+                          );
+                        });
+                      }
+                    }}
                     className={`flex items-center cursor-pointer gap-1 px-2 py-1 rounded-lg text-sm transition 
-    ${following.includes(user._id)
+              ${following.some(f => String(f._id || f) === String(user._id))
                         ? "bg-gray-300 text-black hover:bg-gray-400"
                         : "bg-blue-700 text-white"}`}
                   >
                     <UserPlus className="w-4 h-4" />
-                    {following.includes(user._id) ? "Following" : "Follow"}
+                    {following.some(f => String(f._id || f) === String(user._id))
+                      ? "Following"
+                      : "Follow"}
                   </button>
-
 
                 </div>
               ))

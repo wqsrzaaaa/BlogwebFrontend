@@ -180,6 +180,21 @@ export default function Navbar({ showLogin }) {
 
   const isAnyFollowing = ids.some(id => followingIds.includes(id));
 
+
+useEffect(() => {
+  if (open) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [open]);
+
+
+
   return (
     <nav className="w-full fixed top-0 z-50 bg-white dark:bg-gray-800 shadow-md px-2 md:px-6 py-3 flex items-center justify-between">
       {/* Left Section - Icons */}
@@ -340,7 +355,7 @@ export default function Navbar({ showLogin }) {
                     animate={{ x: 0 }}
                     exit={{ x: "100%" }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="fixed top-0 pt-6 py-6 right-0 min-w-[45vh] w-[70%] sm:w-[40%] h-screen dark:bg-gray-900 bg-white shadow-xl z-50 flex flex-col justify-between space-y-10 px-5"
+                    className="fixed overflow-y-scroll top-0 pt-6 py-6 right-0 min-w-[45vh] w-[70%] sm:w-[40%] h-screen dark:bg-gray-900 bg-white shadow-xl z-50 flex flex-col justify-between space-y-10 px-5"
                   >
                     {/* Close Button */}
                     <button
@@ -443,6 +458,26 @@ export default function Navbar({ showLogin }) {
                         <Newspaper className="text-sm md:text-md" />
                         News
                       </Link>
+                      {/* Profile Section */}
+                    <div className="flex  items-center h-15   gap-4  mt-2">
+                      <Image
+                        width={40}
+                        height={40}
+                        src={currentUser.profile ? currentUser.profile : "/defaultprofile.png"}
+                        alt="profile"
+                        className="w-13 h-13 rounded-full  object-cover"
+                      />
+                      <div className="flex flex-col justify-center">
+                        <Link
+                          href="/profile"
+                          onClick={() => setOpen(false)}
+                          className="flex  gap-2 text-lg font-medium hover:text-orange-500 transition-colors"
+                        >
+                          View Profile
+                        </Link>
+                        <p className="text-gray-500 text-base">{currentUser.username}</p>
+                      </div>
+                    </div>
 
                     </div>
 
@@ -528,26 +563,7 @@ export default function Navbar({ showLogin }) {
                       )}
                     </div>
 
-                    {/* Profile Section */}
-                    <div className="flex  items-center h-15   gap-4  mt-2">
-                      <Image
-                        width={40}
-                        height={40}
-                        src={currentUser.profile ? currentUser.profile : "/defaultprofile.png"}
-                        alt="profile"
-                        className="w-13 h-13 rounded-full  object-cover"
-                      />
-                      <div className="flex flex-col justify-center">
-                        <Link
-                          href="/profile"
-                          onClick={() => setOpen(false)}
-                          className="flex  gap-2 text-lg font-medium hover:text-orange-500 transition-colors"
-                        >
-                          View Profile
-                        </Link>
-                        <p className="text-gray-500 text-base">{currentUser.username}</p>
-                      </div>
-                    </div>
+                    
                   </motion.div>
                 </>
               )}

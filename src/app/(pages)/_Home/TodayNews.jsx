@@ -118,11 +118,13 @@ export default function CardSlider() {
                   alt="story"
                   className="w-full h-full object-center rounded-xl object-cover"
                 />
-                <div className="w-full h-1/2 absolute bottom-0 flex flex-col z-3 p-3 justify-center gap-1">
-                  <h1 className="text-[15px]">{blog.title}</h1>
+                <div className="w-full h-[60%] absolute bottom-0 flex flex-col z-3 p-3 justify-end gap-1">
+                  <div>
+                    <h1 className="text-[15px]">{blog.title}</h1>
                   <p className="text-sm text-zinc-300 font-extralight">
-                    {blog.description.replace(/<[^>]+>/g, "").slice(0, 50)}...
+                    {blog.description.replace(/<[^>]+>/g, "").slice(0, 40)}...
                   </p>
+                  </div>
 
                   <div className="flex gap-2">
                     <img

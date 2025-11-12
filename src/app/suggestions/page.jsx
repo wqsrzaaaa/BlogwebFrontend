@@ -16,7 +16,7 @@ const page = () => {
   const [loading, setloading] = useState(true)
   const allUsers = async () => {
     try {
-      const res = await fetch("http://localhost:3000/alluser");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/alluser`);
       if (!res.ok) {
         console.log("Error fetching all users");
         return;
@@ -180,7 +180,12 @@ const page = () => {
                     />
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{user.username}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-300">{user.bio || "No bio"}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300 line-clamp-1 sm:line-clamp-2">
+                        {user.bio
+                          ? user.bio.split(" ").slice(0, 7).join(" ") +
+                          (user.bio.split(" ").length > 7 ? "..." : "")
+                          : ""}
+                      </p>
                     </div>
                   </div>
                   <button
@@ -228,7 +233,7 @@ const page = () => {
           {activeTab === "following" &&
             (followingTab.length > 0 ? (
               followingTab.map((user) => (
-               <div
+                <div
                   key={user._id}
                   className="flex items-center dark:bg-gray-600 justify-between p-3 cursor-pointer  rounded-xl  transition"
                 >
@@ -242,7 +247,12 @@ const page = () => {
                     />
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{user.username}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-300">{user.bio || "No bio"}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-300 line-clamp-1 sm:line-clamp-2">
+                        {user.bio
+                          ? user.bio.split(" ").slice(0, 7).join(" ") +
+                          (user.bio.split(" ").length > 7 ? "..." : "")
+                          : ""}
+                      </p>
                     </div>
                   </div>
                   <button
@@ -262,27 +272,27 @@ const page = () => {
                 </div>
               ))
             ) : (
-                loading ? (
+              loading ? (
                 Array(5).fill().map((_, i) =>
-              <div key={i} className="flex items-center justify-between p-3 rounded-xl animate-pulse border border-gray-200">
-                <div className="flex items-center w-full gap-3">
-                  {/* Profile Image Skeleton */}
-                  <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl animate-pulse border border-gray-200">
+                    <div className="flex items-center w-full gap-3">
+                      {/* Profile Image Skeleton */}
+                      <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
 
-                  {/* Username and Bio Skeleton */}
-                  <div className="flex flex-col gap-2 w-2/3">
-                    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                      {/* Username and Bio Skeleton */}
+                      <div className="flex flex-col gap-2 w-2/3">
+                        <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                      </div>
+                    </div>
+
+                    {/* Follow Button Skeleton */}
+                    <div className="w-20 h-8 bg-gray-300 rounded-lg"></div>
                   </div>
-                </div>
-
-                {/* Follow Button Skeleton */}
-                <div className="w-20 h-8 bg-gray-300 rounded-lg"></div>
-              </div>
-            )
-            ) : (
-              <p className="text-center text-gray-500">You are not following anyone</p>
-            )
+                )
+              ) : (
+                <p className="text-center text-gray-500">You are not following anyone</p>
+              )
             ))}
         </div>
       </div>

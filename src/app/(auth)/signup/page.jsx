@@ -134,7 +134,7 @@ const SignUp = () => {
       </div>
 
       {/* SignUp Form */}
-      <Card className="w-full md:w-100 h-screen md:h-fit flex justify-center  relative z-[10]">
+      <Card className="w-full md:w-100 h-screen md:h-fit md:!rounded-2xl !rounded-none flex justify-center  relative z-[10]">
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <CardHeader>
             <CardTitle className="text-orange-500">Wellcome to Bloggedin</CardTitle>
@@ -146,7 +146,7 @@ const SignUp = () => {
             </CardAction>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <div className="grid gap-2">
+            <div className="grid gap-2 relative">
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
@@ -155,7 +155,9 @@ const SignUp = () => {
                 onChange={handleChange}
                 placeholder="Your username"
                 required
+                maxLength={15}
               />
+              <p className={`${form.username.length > 14 ? 'text-red-500' : 'text-gray-500'} text-sm font-mono  absolute top-1/2 right-3`}>{form.username.length}/15</p>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
