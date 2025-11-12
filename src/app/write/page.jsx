@@ -3,14 +3,26 @@ import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Dropzone from "react-dropzone";
 import Cropper from "react-easy-crop";
-import getCroppedImg from "@/utils/cropImage";
-import { FileText, Tag, Image, Sparkles, Wand2, ChevronDown, Check, X, TriangleAlert } from "lucide-react";
+import getCroppedImg from "@/utils/cropImage"; // Make sure folder is exactly 'utils'
+import {
+  FileText,
+  Tag,
+  Image,
+  Wand2,
+  ChevronDown,
+  Check,
+  X,
+  TriangleAlert,
+} from "lucide-react";
+
+// React-Quill must be loaded client-side only
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-import "react-quill-new/dist/quill.snow.css";
-import Navbar from "@/(Components)/Navbar";
-import { useRouter } from "next/navigation";
+import "react-quill-new/dist/quill.snow.css"; // Make sure the path exists exactly
+
+import Navbar from "@/components/Navbar"; // Folder name MUST be 'components', not 'Components'
 import Spinner from "@/components/ui/spinner";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const categoriesList = [
   "Technology",
