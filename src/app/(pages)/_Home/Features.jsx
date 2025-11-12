@@ -224,9 +224,6 @@ export default function Features({ showLogin, setShowLogin }) {
   const usersToShow = showAll ? filterUser : filterUser.slice(0, 5);
   const setSelectedBlog = useBlogStore(state => state.setSelectedBlog);
 
-  const shimmerLayer = (
-    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
-  );
 
   return (
     <div className="w-full flex gap-6 px-2 md:px-6 py-6 relative">
@@ -260,7 +257,6 @@ export default function Features({ showLogin, setShowLogin }) {
               {loading && (
                 <div className="flex flex-col gap-5">
                   <BlogSkeleton />
-                  <BlogSkeleton />
                 </div>
               )}
 
@@ -280,24 +276,60 @@ export default function Features({ showLogin, setShowLogin }) {
                         transition={{ duration: 0.3 }}
                         className="rounded-2xl hover:scale-101 md:dark:border-b-1 border-zinc-400 dark:shadow-none cursor-pointer h-fit p-2 shadow-md hover:shadow-lg transition flex flex-col sm:flex-row-reverse items-center sm:items-start gap-4"
                       >
-                        {/* Blog content */}
+                        {/* Image */}
                         <img
                           src={
                             blog.image ||
                             "https://tse2.mm.bing.net/th/id/OIP.90sDWdblfZFiciIEpsGFwwHaEY?rs=1&pid=ImgDetMain&o=7&rm=3"
                           }
-                          alt={blog.title}
+                          alt={blog.title || "Blog cover"}
                           className="w-full sm:w-40 h-48 sm:h-32 object-cover rounded-xl"
                         />
 
+                        {/* Text content */}
                         <div className="flex-1 w-full">
                           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-1">
-                            {blog.title}
+                            {blog.title || "Blog Title Goes Here"}
                           </h2>
                           <p
                             className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-3"
                             dangerouslySetInnerHTML={{ __html: blog.description }}
                           />
+
+                          <div className="flex items-center justify-between">
+                            {/* Author + Liked by */}
+                            <div className="flex items-center gap-3">
+                              {/* Author */}
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={blog.author?.profile || "/defaultprofile.png"}
+                                  alt={blog.author?.username || "Author"}
+                                  className="w-8 h-8 rounded-full  object-cover"
+                                />
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                  {blog.author?.username || "user"}
+                                </span>
+                              </div>
+
+                              {/* Liked by users */}
+                              <div className="flex items-center -space-x-2">
+                                {blog.likes?.slice(0, 3).map((user, index) => (
+                                  <img
+                                    key={index}
+                                    src={user.profile || "/defaultprofile.png"}
+                                    alt={user.username || `User${index + 1}`}
+                                    className="w-6 h-6 object-cover rounded-full border border-white"
+                                  />
+                                ))}
+                                {blog.likes?.length > 0 && (
+                                  <span className="text-xs text-gray-500 dark:text-gray-300 ml-4">
+                                    +{blog.likes.length} liked
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-zinc-400 md:hidden block text-sm mt-2">{formatDate(blog.date)}</p>
                         </div>
                       </motion.div>
                     ))}
@@ -308,6 +340,95 @@ export default function Features({ showLogin, setShowLogin }) {
               )}
             </>
           )}
+        {activeTab === "following" && (
+          <>
+            {loading ? (
+              <div className="flex flex-col gap-5">
+                <BlogSkeleton />
+                <BlogSkeleton />
+              </div>
+            ) : followingBlogs && followingBlogs.length > 0 ? (
+              <div className="flex flex-col gap-5">
+                <AnimatePresence>
+                  {followingBlogs.map((blog) => (
+                    <motion.div
+                      key={blog._id}
+                      onClick={() => {
+                        setSelectedBlog(blog);
+                        router.push(`/story/${blog._id}`);
+                      }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="rounded-2xl hover:scale-101 md:dark:border-b-1 border-zinc-400 dark:shadow-none cursor-pointer h-fit p-2 shadow-md hover:shadow-lg transition flex flex-col sm:flex-row-reverse items-center sm:items-start gap-4"
+                    >
+                      {/* Image */}
+                      <img
+                        src={
+                          blog.image ||
+                          "https://tse2.mm.bing.net/th/id/OIP.90sDWdblfZFiciIEpsGFwwHaEY?rs=1&pid=ImgDetMain&o=7&rm=3"
+                        }
+                        alt={blog.title || "Blog cover"}
+                        className="w-full sm:w-40 h-48 sm:h-32 object-cover rounded-xl"
+                      />
+
+                      {/* Text content */}
+                      <div className="flex-1 w-full">
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-1">
+                          {blog.title || "Blog Title Goes Here"}
+                        </h2>
+                        <p
+                          className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-3"
+                          dangerouslySetInnerHTML={{ __html: blog.description }}
+                        />
+
+                        <div className="flex items-center justify-between">
+                          {/* Author + Liked by */}
+                          <div className="flex items-center gap-3">
+                            {/* Author */}
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={blog.author?.profile || "/defaultprofile.png"}
+                                alt={blog.author?.username || "Author"}
+                                className="w-8 h-8 rounded-full  object-cover"
+                              />
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {blog.author?.username || "user"}
+                              </span>
+                            </div>
+
+                            {/* Liked by users */}
+                            <div className="flex items-center -space-x-2">
+                              {blog.likes?.slice(0, 3).map((user, index) => (
+                                <img
+                                  key={index}
+                                  src={user.profile || "/defaultprofile.png"}
+                                  alt={user.username || `User${index + 1}`}
+                                  className="w-6 h-6 object-cover rounded-full border border-white"
+                                />
+                              ))}
+                              {blog.likes?.length > 0 && (
+                                <span className="text-xs text-gray-500 dark:text-gray-300 ml-4">
+                                  +{blog.likes.length} liked
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-zinc-400 md:hidden block text-sm mt-2">{formatDate(blog.date)}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">
+                No blogs from followed users yet.
+              </p>
+            )}
+          </>
+        )}
         </div>
 
       </div>
