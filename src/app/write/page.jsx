@@ -19,8 +19,8 @@ import {
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css"; // Make sure the path exists exactly
 
-import Navbar from "@/components/Navbar"; // Folder name MUST be 'components', not 'Components'
-import Spinner from "@/components/ui/spinner";
+import Navbar from "@/(Components)/Navbar"; // Folder name MUST be 'components', not 'Components'
+import Spinner from "@/components/ui/Spinner";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
