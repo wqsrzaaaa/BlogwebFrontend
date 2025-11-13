@@ -15,6 +15,7 @@ export default function StoryPage() {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const user = Cookies.get('user')
+  const token = Cookies.get('token')
 
   const fetchUser = async () => {
     try {

@@ -216,6 +216,8 @@ export default function Features({ showLogin, setShowLogin }) {
 
   const usersToShow = showAll ? filterUser : filterUser.slice(0, 5);
   const setSelectedBlog = useBlogStore(state => state.setSelectedBlog);
+  const [open, setOpen] = useState(false);
+  const options = ["Hello", "Hi", "Welcome", "Good Day", "Hey", "Howdy"];
 
 
   return (
@@ -242,6 +244,41 @@ export default function Features({ showLogin, setShowLogin }) {
             Following
           </button>
         </div>
+
+        <div className="relative w-full flex items-center lg:hidden   h-12">
+          <button
+            onClick={() => setOpen(!open)}
+            className="dark:bg-gray-800 bg-zinc-600 text-white cursor-pointer px-4 py-1 rounded-full  transition"
+          >
+            Sort
+          </button>
+
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0, y: -10 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.6, opacity: 0, y: -10 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                className="absolute top-14 bg-zinc-200 dark:bg-gray-800 rounded-2xl shadow-2xl p-4 flex flex-wrap gap-3 w-58 z-10 border border-gray-100"
+              >
+                {categoriesList.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryToggle(cat)}
+                    className={`px-3 py-1 rounded-full cursor-pointer border ${interestBlogs.includes(cat.toLowerCase())
+                      ? "bg-orange-600 text-white border-orange-600"
+                      : " dark:bg-gray-700 bg-zinc-100 dark:text-white text-gray-700 "
+                      }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         {/* Content Area */}
         <div className="mt-4 w-full rounded-xl min-h-[200px]">
           {activeTab === "foryou" && (
@@ -426,7 +463,8 @@ export default function Features({ showLogin, setShowLogin }) {
 
       </div>
 
-      <aside className="w-[30%] min-w-[40vh] hidden lg:block sticky top-0">
+
+      <aside className="xl:w-[36%] w-[42%] min-w-[40vh] hidden lg:block sticky top-0">
         <div className="shadow dark:bg-gray-800 rounded-xl p-4 mb-4">
           <h2 className="text-lg font-semibold mb-3">Who to follow</h2>
           <div className="flex flex-col gap-3">
@@ -434,7 +472,7 @@ export default function Features({ showLogin, setShowLogin }) {
               usersToShow.map((user) => (
                 <div
                   key={user._id}
-                  className="flex items-center justify-between p-2 cursor-pointer rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center min-w-33  justify-between p-2 cursor-pointer rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <div
                     onClick={() => router.push(`/user/profile/${user._id}`)}

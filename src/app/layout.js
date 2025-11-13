@@ -1,10 +1,10 @@
+
+
 import { Inter, Roboto_Mono, Ubuntu } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
+import Provider from "./Provider";
 
 const ubuntu = Ubuntu({ subsets: ["latin"], weight: ["400"] });
-const inter = Inter({ subsets: ["latin"], variable: "--font-geist-sans" });
-const robotoMono = Roboto_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata = {
   title: "Bloggedin - Share Your Stories",
@@ -18,16 +18,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${ubuntu.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

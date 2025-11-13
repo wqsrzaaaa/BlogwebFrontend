@@ -79,7 +79,6 @@ export default function IndivisualProfile() {
       ? profileData.follower || []
       : profileData.following || [];
 
-      console.log(profileData);
       
   return (
     <>

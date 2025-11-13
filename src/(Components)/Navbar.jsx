@@ -181,17 +181,17 @@ export default function Navbar({ showLogin }) {
   const isAnyFollowing = ids.some(id => followingIds.includes(id));
 
 
-useEffect(() => {
-  if (open) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
 
-  return () => {
-    document.body.style.overflow = "auto";
-  };
-}, [open]);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
 
 
 
@@ -337,7 +337,7 @@ useEffect(() => {
             </button>
 
 
-            <AnimatePresence >
+            <AnimatePresence  >
               {open && (
                 <>
                   {/* Dim overlay */}
@@ -366,7 +366,7 @@ useEffect(() => {
                     </button>
 
                     {/* Nav Links */}
-                    <div className="flex flex-col items-start text-2xl font-semibold space-y-4">
+                    <div className="flex flex-col items-start text-2xl font-semibold space-y-4 m-0">
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild >
@@ -459,29 +459,30 @@ useEffect(() => {
                         News
                       </Link>
                       {/* Profile Section */}
-                    <div className="flex  items-center h-15   gap-4  mt-2">
-                      <Image
-                        width={40}
-                        height={40}
-                        src={currentUser.profile ? currentUser.profile : "/defaultprofile.png"}
-                        alt="profile"
-                        className="w-13 h-13 rounded-full  object-cover"
-                      />
-                      <div className="flex flex-col justify-center">
-                        <Link
-                          href="/profile"
-                          onClick={() => setOpen(false)}
-                          className="flex  gap-2 text-lg font-medium hover:text-orange-500 transition-colors"
-                        >
-                          View Profile
-                        </Link>
-                        <p className="text-gray-500 text-base">{currentUser.username}</p>
+                      <div className="flex  items-center h-15   gap-4  mt-2">
+                        <Image
+                          width={40}
+                          height={40}
+                          src={currentUser.profile ? currentUser.profile : "/defaultprofile.png"}
+                          alt="profile"
+                          priority 
+                          className="w-13 h-13 rounded-full  object-cover"
+                        />
+                        <div className="flex flex-col justify-center">
+                          <Link
+                            href="/profile"
+                            onClick={() => setOpen(false)}
+                            className="flex  gap-2 text-lg font-medium hover:text-orange-500 transition-colors"
+                          >
+                            View Profile
+                          </Link>
+                          <p className="text-gray-500 text-base">{currentUser.username}</p>
+                        </div>
                       </div>
-                    </div>
 
                     </div>
 
-                    <div className="  rounded-xl  w-full">
+                    <div className="  rounded-xl pb-10  w-full">
                       <h2 className="text-lg font-semibold mb-3">Who to follow</h2>
                       <div className="flex flex-col gap-3">
                         {!loading ? (
@@ -563,7 +564,7 @@ useEffect(() => {
                       )}
                     </div>
 
-                    
+
                   </motion.div>
                 </>
               )}
